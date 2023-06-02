@@ -6,12 +6,11 @@ const bcrypt = require('bcrypt');
 
 // user functions
 async function createUser({ username, password }) {
-
-const SALT_COUNT = 10;
-
-const hashedPassword = await bcrypt.hash(password, SALT_COUNT)
-  
+  const SALT_COUNT = 10;
+  const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
+  return { username, password: hashedPassword };
 }
+
 
 async function getUser({ username, password }) {
 

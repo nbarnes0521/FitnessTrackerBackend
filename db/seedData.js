@@ -3,6 +3,9 @@
 const client = require("./client")
 const { createUser } = require('./users')
 const { createActivity } = require ('./activities.js')
+const { createRoutine } = require ('./routines')
+const { getRoutinesWithoutActivities } = require ( './routines.js')
+
 
 async function dropTables() {
   const dropAllTables = `
@@ -20,9 +23,6 @@ async function dropTables() {
     console.error("Error dropping Tables!")
     throw error
   }
-
- 
-
 }
 
 async function createTables() {
@@ -74,6 +74,7 @@ async function createInitialUsers() {
     throw error
   }
 }
+
 async function createInitialActivities() {
   try {
     console.log("Starting to create activities...")
@@ -102,7 +103,7 @@ async function createInitialActivities() {
     console.log("activities created:")
     console.log(activities)
 
-    console.log("Finished creating activities!")
+    console.log("Finished creating activities! *DOES BACKFLIP*")
   } catch (error) {
     console.error("Error creating activities!")
     throw error
@@ -142,7 +143,7 @@ async function createInitialRoutines() {
     routinesToCreate.map((routine) => createRoutine(routine))
   )
   console.log("Routines Created: ", routines)
-  console.log("Finished creating routines.")
+  console.log("Finished creating routines. KA-CHOW!")
 }
 
 async function createInitialRoutineActivities() {
