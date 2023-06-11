@@ -15,7 +15,7 @@ const { addActivityToRoutine } = require ( './routine_activities')
 
 async function dropTables() {
   const dropAllTables = `
-    DROP TABLE IF EXISTS mytablename, activities, routines;
+    DROP TABLE IF EXISTS mytablename, activities, routines, routineActivities;
 
   `;
   
@@ -59,12 +59,27 @@ CREATE TABLE routines (
 )
 `;
 
+// ROUTINEACTIVITES TABLE //
+const createRoutineActivities = `
+  CREATE TABLE routineActivities (
+    id SERIAL PRIMARY KEY,
+    "routineId" INTEGER REFERENCES routines (id),
+    "activityId" INTEGER REFERENCES activities (id),
+    duration INTEGER,
+    count INTEGER,
+    UNIQUE ("routineId", "activityId")
+  )
+`;
+
+
+// STARTING TO BUILD //
   console.log("Starting to build tables...")
   // create all tables, in the correct order
   try {
     await client.query(createUsersTable);
     await client.query(createActivitiesTable);
     await client.query(createRoutinesTable);
+    await client.query(createRoutineActivities);
 
 
     console.log("Tables built successfully!!!!!!!! :D");
