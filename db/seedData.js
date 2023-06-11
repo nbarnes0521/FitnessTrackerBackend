@@ -1,4 +1,5 @@
 // git reset --hard HEAD
+// npm run test:watch db
 // require in the database adapter functions as you write them (createUser, createActivity...)
 // const { } = require('./');
 const client = require("./client")
@@ -6,11 +7,16 @@ const { createUser } = require('./users')
 const { createActivity } = require ('./activities.js')
 const { createRoutine } = require ('./routines')
 const { getRoutinesWithoutActivities } = require ( './routines.js')
+const { getAllActivities } = require ( './activities')
+const { addActivityToRoutine } = require ( './routine_activities')
+
+
 
 
 async function dropTables() {
   const dropAllTables = `
-    DROP TABLE IF EXISTS mytablename;
+    DROP TABLE IF EXISTS mytablename, activities, routines;
+
   `;
   
   console.log("Dropping All Tables...");
@@ -26,6 +32,7 @@ async function dropTables() {
   }
 }
 
+// USER TABLE ////
 async function createTables() {
   const createUsersTable = `
     CREATE TABLE mytablename (
@@ -34,21 +41,27 @@ async function createTables() {
       password VARCHAR(255) NOT NULL
     )
   `;
+
+// ACTIVITIES TABLE ///
+  const createActivitiesTable = `
+    CREATE TABLE activities (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) UNIQUE NOT NULL,
+      description	TEXT NOT NULL
+    )
+  `;
+
   console.log("Starting to build tables...")
   // create all tables, in the correct order
   try {
     await client.query(createUsersTable);
+    await client.query(createActivitiesTable);
 
     console.log("Tables built successfully!!!!!!!! :D");
   } catch (error) {
     console.error("Error creating Tables!")
     throw error
   }
-  
-  
-
-
-
 }
 
 /* 
@@ -147,7 +160,8 @@ async function createInitialRoutines() {
   console.log("Finished creating routines. KA-CHOW!")
 }
 
-async function createInitialRoutineActivities() {
+async function createInitialRoutineActivities() { 
+  try {
   console.log("starting to create routine_activities...")
   const [bicepRoutine, chestRoutine, legRoutine, cardioRoutine] =
     await getRoutinesWithoutActivities()
@@ -215,6 +229,10 @@ async function createInitialRoutineActivities() {
   )
   console.log("routine_activities created: ", routineActivities)
   console.log("Finished creating routine_activities!")
+  } catch (error) {
+    console.error("Error creating routine_activities!")
+    throw error
+  }
 }
 
 async function rebuildDB() {

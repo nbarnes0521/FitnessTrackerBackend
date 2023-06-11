@@ -7,7 +7,14 @@ async function createActivity({ name, description }) {
 }
 
 async function getAllActivities() {
-  // select and return an array of all activities
+  try {
+    const query = 'SELECT * FROM activities';
+    const result = await client.query(query);
+    return result.rows;
+  } catch (error) {
+    console.error('Error retrieving activities:', error);
+    throw error;
+  }
 }
 
 async function getActivityById(id) {}
