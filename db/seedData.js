@@ -51,11 +51,21 @@ async function createTables() {
     )
   `;
 
+// ROUTINES TABLE ///
+const createRoutinesTable = `
+CREATE TABLE routines (
+  id SERIAL PRIMARY KEY,
+  "creatorId" INTEGER 	REFERENCES users(id), "isPublic" BOOLEAN 	DEFAULT false, name VARCHAR(255) UNIQUE NOT NULL, goal TEXT NOT NULL
+)
+`;
+
   console.log("Starting to build tables...")
   // create all tables, in the correct order
   try {
     await client.query(createUsersTable);
     await client.query(createActivitiesTable);
+    await client.query(createRoutinesTable);
+
 
     console.log("Tables built successfully!!!!!!!! :D");
   } catch (error) {
